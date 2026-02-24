@@ -8,123 +8,39 @@ _**Montador de Videos para VZ**_
 
 </header>
 
-## Qué hace este proyecto
+## Uso rápido: composición automática `A + X + B + Y + C`
 
-Genera automáticamente un vídeo final con esta estructura fija:
+Este repo incluye un script para generar vídeos con estructura fija:
 
-`A + 10 segundos de X + B + 10 segundos de Y + C`
+1. Entradilla fija `A`
+2. 10 segundos de vídeo variable `X`
+3. Nudo fijo `B`
+4. 10 segundos de vídeo variable `Y`
+5. Cierre fijo `C`
 
-- `A`, `B`, `C`: clips fijos que se repiten siempre.
-- `X`, `Y`: clips variables que cambian en cada vídeo.
+### Requisitos
 
----
+- Python 3.10+
+- `ffmpeg` instalado y disponible en `PATH`
 
-## Guía paso a paso (desde cero)
-
-### 1) Instalar lo necesario
-
-Necesitas:
-- **Python 3.10 o superior**
-- **ffmpeg** (imprescindible)
-
-Comandos típicos para instalar `ffmpeg`:
-
-```bash
-# Ubuntu / Debian
-sudo apt update && sudo apt install -y ffmpeg
-
-# macOS (Homebrew)
-brew install ffmpeg
-
-# Windows (winget)
-winget install Gyan.FFmpeg
-```
-
-Verifica que todo está bien:
-
-```bash
-python3 --version
-ffmpeg -version
-```
-
----
-
-### 2) Preparar tus archivos de vídeo
-
-Crea una carpeta `media/` y mete ahí tus vídeos, por ejemplo:
-
-- `media/A.mp4` (entradilla fija)
-- `media/B.mp4` (nudo fijo)
-- `media/C.mp4` (cierre fijo)
-- `media/X_001.mp4` (clip variable X)
-- `media/Y_001.mp4` (clip variable Y)
-
-> El script recorta automáticamente **X** e **Y** a 10 segundos.
-
----
-
-### 3) Ejecutar el script
-
-Desde la raíz del proyecto (`Videos_VZ`), lanza:
+### Comando
 
 ```bash
 python3 compose_video.py \
   --a media/A.mp4 \
-  --x media/X_001.mp4 \
+  --x media/X_unico.mp4 \
   --b media/B.mp4 \
-  --y media/Y_001.mp4 \
+  --y media/Y_unico.mp4 \
   --c media/C.mp4 \
-  --output output/video_final_001.mp4
+  --output output/video_final.mp4
 ```
 
-Si todo va bien, verás algo como:
-
-```text
-Vídeo creado: output/video_final_001.mp4
-```
-
----
-
-### 4) Repetir para nuevos vídeos (rápido)
-
-Para cada vídeo nuevo:
-- mantienes `A`, `B`, `C` iguales,
-- solo cambias `X` y `Y`,
-- y cambias el nombre del `--output`.
-
-Ejemplo:
-
-```bash
-python3 compose_video.py \
-  --a media/A.mp4 \
-  --x media/X_002.mp4 \
-  --b media/B.mp4 \
-  --y media/Y_002.mp4 \
-  --c media/C.mp4 \
-  --output output/video_final_002.mp4
-```
-
----
-
-## Qué hace internamente el script
+### Qué hace internamente
 
 - Recorta `X` y `Y` a **10 segundos**.
-- Normaliza todos los clips para que tengan formato compatible (1080p, 30fps, H.264/AAC).
-- Concatena en orden: `A + X + B + Y + C`.
-- Exporta un `.mp4` final.
-
----
-
-## Problemas típicos y solución
-
-- **`ffmpeg no está instalado o no está en PATH`**
-  - Instala ffmpeg y vuelve a abrir la terminal.
-
-- **`No se encontró X: ...` (o A/B/C/Y)**
-  - Revisa rutas y nombres de archivos.
-
-- **Vídeo tarda en procesar**
-  - Es normal al recodificar. Depende de duración y potencia del equipo.
+- Normaliza todos los clips a formato compatible para unirlos.
+- Concatena en orden `A + X + B + Y + C`.
+- Exporta un `.mp4` final automáticamente.
 
 <footer>
 
